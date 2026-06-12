@@ -516,8 +516,6 @@ async def cb_edit_welcome(client: Client, cb: CallbackQuery):
         if not answered:
             await answer_cb(cb)
 
-
-@Client.on_edit_maintenance_msg
 @Client.on_callback_query(filters.regex(r"^edit_maintenance_msg$"))
 @owner_only
 async def cb_edit_maintenance_msg(client: Client, cb: CallbackQuery):
