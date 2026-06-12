@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from pyrogram import Client, filters
+from pyrogram.enums import ParseMode
 from pyrogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from config import OWNER_ID
 from db.mongo import get_all_active_user_ids
@@ -41,7 +42,7 @@ async def cb_broadcast_menu(client: Client, cb: CallbackQuery):
             f"Kirim pesan ke semua <code>{users}</code> user aktif.\n\n"
             "Klik tombol di bawah, lalu kirim pesan yang ingin dibroadcast."
         )
-        await cb.message.edit_text(text, reply_markup=kb_broadcast_menu(), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_broadcast_menu(), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -67,7 +68,7 @@ async def cb_bc_start(client: Client, cb: CallbackQuery):
         )
         await cb.message.edit_text(text, reply_markup=InlineKeyboardMarkup([[
             InlineKeyboardButton("❌ Batal", callback_data="bc_cancel")
-        ]]), parse_mode="html")
+        ]]), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -111,7 +112,7 @@ async def cb_bc_confirm(client: Client, cb: CallbackQuery):
             f"❌ Gagal    : <code>{failed}</code>\n"
             f"📊 Total    : <code>{sent + failed}</code>",
             reply_markup=kb_main(),
-            parse_mode="html"
+            parse_mode=ParseMode.HTML
         )
     except Exception as e:
         log.error(f"[cb_bc_confirm] {e}")
@@ -134,7 +135,7 @@ async def cb_bc_cancel(client: Client, cb: CallbackQuery):
         await cb.message.edit_text(
             "<b>❌ Broadcast dibatalkan.</b>",
             reply_markup=kb_broadcast_menu(),
-            parse_mode="html"
+            parse_mode=ParseMode.HTML
         )
     except Exception as e:
         log.error(f"[cb_bc_cancel] {e}")
@@ -162,5 +163,5 @@ async def receive_bc_message(client: Client, msg: Message):
         f"<blockquote>{preview_text[:200]}</blockquote>\n\n"
         f"Penerima: <code>{len(get_all_active_user_ids())}</code> user aktif",
         reply_markup=kb_bc_confirm(),
-        parse_mode="html"
+        parse_mode=ParseMode.HTML
     )
