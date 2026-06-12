@@ -1,3 +1,7 @@
+import dns.resolver
+dns.resolver.default_resolver = dns.resolver.Resolver(configure=False)
+dns.resolver.default_resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
+
 from datetime import datetime
 from pymongo import MongoClient, ASCENDING
 from config import MONGO_URI, DB_NAME
