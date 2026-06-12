@@ -1,4 +1,5 @@
 import logging
+from pyrogram.enums import ParseMode
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from config import OWNER_ID, BOT_NAME
@@ -35,7 +36,7 @@ async def cmd_start(client: Client, msg: Message):
     upsert_user(user.id, user.first_name or "", user.username or "")
 
     if user.id == OWNER_ID:
-        await msg.reply(_dashboard_text(), reply_markup=kb_main(), parse_mode="html")
+        await msg.reply(_dashboard_text(), reply_markup=kb_main(), parse_mode="HTML")
         return
 
     if is_maintenance():
@@ -47,7 +48,7 @@ async def cmd_start(client: Client, msg: Message):
     welcome = s.get("welcome_msg", f"👋 Halo {{name}}!\n\nSelamat datang di <b>{BOT_NAME}</b>.")
     await msg.reply(
         welcome.replace("{name}", user.first_name or "").replace("{bot}", BOT_NAME),
-        parse_mode="html"
+        parse_mode="HTML"
     )
 
 
