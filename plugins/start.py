@@ -36,7 +36,7 @@ async def cmd_start(client: Client, msg: Message):
     upsert_user(user.id, user.first_name or "", user.username or "")
 
     if user.id == OWNER_ID:
-        await msg.reply(_dashboard_text(), reply_markup=kb_main(), parse_mode="HTML")
+        await msg.reply(_dashboard_text(), reply_markup=kb_main(), parse_mode=ParseMode.HTML)
         return
 
     if is_maintenance():
@@ -48,7 +48,7 @@ async def cmd_start(client: Client, msg: Message):
     welcome = s.get("welcome_msg", f"👋 Halo {{name}}!\n\nSelamat datang di <b>{BOT_NAME}</b>.")
     await msg.reply(
         welcome.replace("{name}", user.first_name or "").replace("{bot}", BOT_NAME),
-        parse_mode="HTML"
+        parse_mode=ParseMode.HTML
     )
 
 
@@ -62,7 +62,7 @@ async def cmd_help(client: Client, msg: Message):
         "/status — Lihat status bot\n"
         "/cancel — Batalkan input yang sedang berlangsung\n"
         "/help — Bantuan ini\n",
-        parse_mode="html"
+        parse_mode=ParseMode.HTML
     )
 
 
@@ -74,7 +74,7 @@ async def cmd_status(client: Client, msg: Message):
         f"📨 Forward: <code>{fmt_num(total_forwarded_all())}</code> pesan\n"
         f"👥 Users  : <code>{count_users()}</code>\n"
         f"🔧 Maint  : {'🔴 ON' if is_maintenance() else '🟢 OFF'}\n",
-        parse_mode="html"
+        parse_mode=ParseMode.HTML
     )
 
 
