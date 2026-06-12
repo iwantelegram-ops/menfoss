@@ -1,6 +1,7 @@
 import functools
 import logging
 from pyrogram import Client, filters
+from pyrogram.enums import ParseMode
 from pyrogram.types import (
     CallbackQuery, Message,
     InlineKeyboardMarkup, InlineKeyboardButton
@@ -110,7 +111,7 @@ def pair_detail_text(pair: dict) -> str:
 async def cb_dashboard(client: Client, cb: CallbackQuery):
     answered = False
     try:
-        await cb.message.edit_text(dashboard_text(), reply_markup=kb_main(), parse_mode="html")
+        await cb.message.edit_text(dashboard_text(), reply_markup=kb_main(), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -131,7 +132,7 @@ async def cb_pairs_list(client: Client, cb: CallbackQuery):
             f"<b>📡 Daftar Channel Pairs ({len(pairs)})</b>\n\n"
             + ("Pilih pair untuk mengelola:" if pairs else "Belum ada pair. Tambahkan sekarang!")
         )
-        await cb.message.edit_text(text, reply_markup=kb_pairs_list(pairs), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_pairs_list(pairs), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -153,7 +154,7 @@ async def cb_pair_detail(client: Client, cb: CallbackQuery):
             await answer_cb(cb, "❌ Pair tidak ditemukan.", show_alert=True)
             answered = True
             return
-        await cb.message.edit_text(pair_detail_text(pair), reply_markup=kb_pair_detail(pair), parse_mode="html")
+        await cb.message.edit_text(pair_detail_text(pair), reply_markup=kb_pair_detail(pair), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -176,7 +177,7 @@ async def cb_pair_toggle(client: Client, cb: CallbackQuery):
         answered = True
         pair = get_pair(pid)
         if pair:
-            await cb.message.edit_text(pair_detail_text(pair), reply_markup=kb_pair_detail(pair), parse_mode="html")
+            await cb.message.edit_text(pair_detail_text(pair), reply_markup=kb_pair_detail(pair), parse_mode=ParseMode.HTML)
     except Exception as e:
         log.error(f"[cb_pair_toggle] {e}")
     finally:
@@ -198,7 +199,7 @@ async def cb_pair_mode(client: Client, cb: CallbackQuery):
         answered = True
         pair = get_pair(pid)
         if pair:
-            await cb.message.edit_text(pair_detail_text(pair), reply_markup=kb_pair_detail(pair), parse_mode="html")
+            await cb.message.edit_text(pair_detail_text(pair), reply_markup=kb_pair_detail(pair), parse_mode=ParseMode.HTML)
     except Exception as e:
         log.error(f"[cb_pair_mode] {e}")
     finally:
@@ -224,7 +225,7 @@ async def cb_pair_filters(client: Client, cb: CallbackQuery):
             f"Tap untuk toggle aktif/nonaktif.\n"
             f"Aktif: <code>{active_count}/{len(ALL_TYPES)}</code>"
         )
-        await cb.message.edit_text(text, reply_markup=kb_pair_filters(pair), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_pair_filters(pair), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -289,7 +290,7 @@ async def cb_pair_caption(client: Client, cb: CallbackQuery):
             f"Contoh: <code>📢 Update terbaru|||#berita</code>\n"
             f"Kirim <code>-</code> untuk hapus keduanya."
         )
-        await cb.message.edit_text(text, reply_markup=kb_cancel("caption", pid), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_cancel("caption", pid), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -321,7 +322,7 @@ async def cb_pair_blacklist(client: Client, cb: CallbackQuery):
             f"Contoh: <code>spam, iklan, judi</code>\n"
             f"Kirim <code>-</code> untuk kosongkan blacklist."
         )
-        await cb.message.edit_text(text, reply_markup=kb_cancel("blacklist", pid), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_cancel("blacklist", pid), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -350,7 +351,7 @@ async def cb_pair_delay(client: Client, cb: CallbackQuery):
             f"Kirim angka detik (0 = tanpa delay):\n"
             f"Contoh: <code>5</code>"
         )
-        await cb.message.edit_text(text, reply_markup=kb_cancel("delay", pid), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_cancel("delay", pid), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -379,7 +380,7 @@ async def cb_pair_remove_confirm(client: Client, cb: CallbackQuery):
             f"Yakin hapus:\n<b>{src} → {tgt}</b>?\n\n"
             f"Tindakan ini tidak dapat dibatalkan!"
         )
-        await cb.message.edit_text(text, reply_markup=kb_confirm_delete(pid), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_confirm_delete(pid), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -401,7 +402,7 @@ async def cb_pair_remove_do(client: Client, cb: CallbackQuery):
         answered = True
         pairs = get_all_pairs()
         text  = f"<b>📡 Daftar Channel Pairs ({len(pairs)})</b>"
-        await cb.message.edit_text(text, reply_markup=kb_pairs_list(pairs), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_pairs_list(pairs), parse_mode=ParseMode.HTML)
     except Exception as e:
         log.error(f"[cb_pair_remove_do] {e}")
     finally:
@@ -424,7 +425,7 @@ async def cb_pair_add(client: Client, cb: CallbackQuery):
             "Contoh: <code>-1001234567890</code>  atau  <code>@channelku</code>\n\n"
             "<i>⚠️ Bot harus sudah menjadi admin di channel tersebut.</i>"
         )
-        await cb.message.edit_text(text, reply_markup=kb_cancel("add_pair"), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_cancel("add_pair"), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -452,7 +453,7 @@ async def cb_cancel_input(client: Client, cb: CallbackQuery):
                 await cb.message.edit_text(
                     pair_detail_text(pair),
                     reply_markup=kb_pair_detail(pair),
-                    parse_mode="html"
+                    parse_mode=ParseMode.HTML
                 )
                 return
 
@@ -462,7 +463,7 @@ async def cb_cancel_input(client: Client, cb: CallbackQuery):
         await cb.message.edit_text(
             f"<b>📡 Daftar Channel Pairs ({len(pairs)})</b>",
             reply_markup=kb_pairs_list(pairs),
-            parse_mode="html"
+            parse_mode=ParseMode.HTML
         )
     except Exception as e:
         log.error(f"[cb_cancel_input] {e}")
@@ -483,7 +484,7 @@ async def cb_settings_menu(client: Client, cb: CallbackQuery):
             f"<b>Welcome:</b>\n<code>{(s.get('welcome_msg') or '—')[:100]}</code>\n\n"
             f"<b>Maintenance:</b>\n<code>{(s.get('maintenance_msg') or '—')[:100]}</code>"
         )
-        await cb.message.edit_text(text, reply_markup=kb_settings(), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_settings(), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -506,7 +507,7 @@ async def cb_edit_welcome(client: Client, cb: CallbackQuery):
             "• <code>{bot}</code> — nama bot\n\n"
             "Kirim teks baru:"
         )
-        await cb.message.edit_text(text, reply_markup=kb_cancel("edit_welcome"), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_cancel("edit_welcome"), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -516,6 +517,7 @@ async def cb_edit_welcome(client: Client, cb: CallbackQuery):
             await answer_cb(cb)
 
 
+@Client.on_edit_maintenance_msg
 @Client.on_callback_query(filters.regex(r"^edit_maintenance_msg$"))
 @owner_only
 async def cb_edit_maintenance_msg(client: Client, cb: CallbackQuery):
@@ -523,7 +525,7 @@ async def cb_edit_maintenance_msg(client: Client, cb: CallbackQuery):
     try:
         _input_state[OWNER_ID] = {"action": "edit_maintenance_msg", "pair_id": ""}
         text = "<b>✏️ Edit Pesan Maintenance</b>\n\nKirim teks baru:"
-        await cb.message.edit_text(text, reply_markup=kb_cancel("edit_maintenance_msg"), parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb_cancel("edit_maintenance_msg"), parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -545,7 +547,7 @@ async def cb_toggle_maintenance(client: Client, cb: CallbackQuery):
         status  = "🔴 ON" if new_val else "🟢 OFF"
         await answer_cb(cb, f"Maintenance: {status}")
         answered = True
-        await cb.message.edit_text(dashboard_text(), reply_markup=kb_main(), parse_mode="html")
+        await cb.message.edit_text(dashboard_text(), reply_markup=kb_main(), parse_mode=ParseMode.HTML)
     except Exception as e:
         log.error(f"[cb_toggle_maintenance] {e}")
     finally:
@@ -577,7 +579,7 @@ async def cb_stats_global(client: Client, cb: CallbackQuery):
         kb = InlineKeyboardMarkup([[
             InlineKeyboardButton("🏠 Menu Utama", callback_data="dashboard")
         ]])
-        await cb.message.edit_text(text, reply_markup=kb, parse_mode="html")
+        await cb.message.edit_text(text, reply_markup=kb, parse_mode=ParseMode.HTML)
         answered = True
         await answer_cb(cb)
     except Exception as e:
@@ -622,7 +624,7 @@ async def _add_pair_source(client: Client, msg: Message, text: str):
     try:
         chat = await client.get_chat(text)
     except Exception as e:
-        await msg.reply(f"❌ Gagal resolve channel: <code>{e}</code>\n\nCoba lagi:", parse_mode="html")
+        await msg.reply(f"❌ Gagal resolve channel: <code>{e}</code>\n\nCoba lagi:", parse_mode=ParseMode.HTML)
         return
 
     if chat.type.value not in ("channel", "supergroup"):
@@ -638,7 +640,7 @@ async def _add_pair_source(client: Client, msg: Message, text: str):
         "<b>Langkah 2/2 — Target Channel</b>\n\n"
         "Kirim ID atau username channel tujuan:",
         reply_markup=kb_cancel("add_pair"),
-        parse_mode="html"
+        parse_mode=ParseMode.HTML
     )
 
 
@@ -646,7 +648,7 @@ async def _add_pair_target(client: Client, msg: Message, text: str, state: dict)
     try:
         chat = await client.get_chat(text)
     except Exception as e:
-        await msg.reply(f"❌ Gagal resolve channel: <code>{e}</code>\n\nCoba lagi:", parse_mode="html")
+        await msg.reply(f"❌ Gagal resolve channel: <code>{e}</code>\n\nCoba lagi:", parse_mode=ParseMode.HTML)
         return
 
     if chat.type.value not in ("channel", "supergroup"):
@@ -677,7 +679,7 @@ async def _add_pair_target(client: Client, msg: Message, text: str, state: dict)
         f"   ↓  (copy mode, semua tipe aktif)\n"
         f"📥 <b>{chat.title}</b>",
         reply_markup=kb_pairs_list(pairs),
-        parse_mode="html"
+        parse_mode=ParseMode.HTML
     )
 
 
@@ -696,7 +698,7 @@ async def _handle_input(msg: Message, action: str, pid: str, text: str):
                 f"Prefix: <code>{prefix or '—'}</code>\n"
                 f"Suffix: <code>{suffix or '—'}</code>",
                 reply_markup=kb_back_to_detail(pid),
-                parse_mode="html"
+                parse_mode=ParseMode.HTML
             )
 
     elif action == "blacklist":
@@ -710,7 +712,7 @@ async def _handle_input(msg: Message, action: str, pid: str, text: str):
                 f"✅ Blacklist diperbarui ({len(words)} kata):\n"
                 f"<code>{', '.join(words)}</code>",
                 reply_markup=kb_back_to_detail(pid),
-                parse_mode="html"
+                parse_mode=ParseMode.HTML
             )
 
     elif action == "delay":
@@ -720,7 +722,7 @@ async def _handle_input(msg: Message, action: str, pid: str, text: str):
             await msg.reply(
                 f"✅ Delay diatur: <code>{delay} detik</code>",
                 reply_markup=kb_back_to_detail(pid),
-                parse_mode="html"
+                parse_mode=ParseMode.HTML
             )
         except ValueError:
             await msg.reply("❌ Masukkan angka yang valid (contoh: 5)", reply_markup=kb_back_to_detail(pid))
@@ -730,7 +732,7 @@ async def _handle_input(msg: Message, action: str, pid: str, text: str):
         await msg.reply(
             f"✅ Pesan welcome diperbarui:\n<code>{text[:200]}</code>",
             reply_markup=kb_main(),
-            parse_mode="html"
+            parse_mode=ParseMode.HTML
         )
 
     elif action == "edit_maintenance_msg":
@@ -738,5 +740,5 @@ async def _handle_input(msg: Message, action: str, pid: str, text: str):
         await msg.reply(
             f"✅ Pesan maintenance diperbarui:\n<code>{text[:200]}</code>",
             reply_markup=kb_main(),
-            parse_mode="html"
+            parse_mode=ParseMode.HTML
         )
